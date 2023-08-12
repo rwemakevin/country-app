@@ -74,11 +74,31 @@ input {
 
 .country {
   flex-basis: calc(25% - 10px);
-  border: 1px solid purple;
   margin-top: 20px;
 }
 
 .card {
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+  border-radius: 7px;
+  padding-bottom: 30px;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+.card h3,
+.card p {
+  padding-left: 20px;
+}
+
+.card h3 {
+  margin: 10px 0;
+}
+
+.card img {
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
 }
