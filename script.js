@@ -207,11 +207,18 @@ fetch(apiUrl)
         //get border array
         const borderArr = data[0].borders;
         console.log(borderArr);
-        for( let i = 0; i < borderArr.length; i++){
+        if(borderArr) {
+          for( let i = 0; i < borderArr.length; i++){
+            const a1 = document.createElement('a');
+            a1.textContent = borderArr[i];
+            borderCountries.appendChild(a1)
+          }
+        }else {
           const a1 = document.createElement('a');
-          a1.textContent = borderArr[i];
+          a1.textContent = "no border";
           borderCountries.appendChild(a1)
         }
+        
 
         //add p6, p7, p8 to col2
         col2.appendChild(p6)
@@ -251,6 +258,11 @@ fetch(apiUrl)
         container.appendChild(countryInfo);
         container.appendChild(countryInfo);
         UpdateContainer.appendChild(container);
+
+        //button functionality relaods the page
+        button.addEventListener('click',() => {
+          location.reload();
+        })
 
  })
       .catch(error => {
