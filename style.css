@@ -107,3 +107,65 @@ img {
   border-top-left-radius: 7px;
   border-top-right-radius: 7px;
 }
+
+.back-button {
+  padding: 10px 40px;
+  border: none;
+  border-radius: 7px;
+  background: rgb(53, 52, 52);
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+}
+
+.country-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.img-holder,
+.country-description {
+  flex-basis: calc(50% - 30px);
+}
+
+.country-description {
+  padding: 40px 0;
+}
+
+.img-holder img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.country-details {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.col-1,
+.col-2 {
+  flex-basis: calc(50% - 20px);
+  padding: 10px;
+}
+
+.col-1 p,
+.col-2 p {
+  padding-bottom: 3px;
+}
+
+.border-countries p {
+  display: inline;
+  padding: 10px;
+}
+
+.border-countries a {
+  text-decoration: none;
+  border: none;
+  background: rgb(228, 227, 227);
+  padding: 5px 10px;
+  color: rgb(8, 8, 8);
+  border-radius: 7px;
+  margin: 0 2px;
+}
