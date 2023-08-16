@@ -3,9 +3,32 @@ let flagsContainer = document.getElementById('flags-container')
 const selectContinent = document.getElementById('select')
 let continent = "";
 
+let searchQuery = document.getElementById("search-query");
+let searchQueryText = "";
+let searchButton = document.getElementById("search-btn");
+searchButton.addEventListener('click',function(){
+searchQueryText = searchQuery.value;
+  if(searchQueryText === ""){
+    alert("Empty Field")
+  }else {
+    console.log(searchQueryText);
+    searchResult(searchQueryText);
+   
+  }
+  
+})
+
+
 function resetDOM() {
   console.log("Yay!")
   flagsContainer.textContent = "";
+}
+
+function handleErrorResult(){
+  flagsContainer.className = "error";
+  let errorParagraph = document.createElement('p');
+  errorParagraph.textContent = "Error: Check well the country name";
+  flagsContainer.appendChild(errorParagraph);
 }
 
 function updateDOM() {
@@ -247,6 +270,8 @@ function updateDOM() {
 selectContinent.addEventListener('change', function () {
   resetDOM();
   updateDOM();
+  flagsContainer.classList.remove('error');
+  
 })
 
 // Replace with the actual API endpoint URL
@@ -483,3 +508,183 @@ fetch(apiUrl)
   .catch(error => {
     console.error('There was a problem with the fetch operation:', error);
   });
+
+
+
+
+  // Search result function
+  function searchResult(argument) {
+    
+    
+    let apiUrlByCountry = `https://restcountries.com/v3.1/name/${argument}?fullText=true`
+    fetch(apiUrlByCountry)
+    .then(response => {
+      if (!response.ok) {
+        resetDOM();
+        handleErrorResult();
+        throw new Error(`Network response was not ok: ${response.status}`);
+        
+      }
+      return response.json();
+    })
+    .then (data => {
+      
+      let UpdateContainer = document.getElementById('update-container')
+      UpdateContainer.textContent = "";
+      let container = document.createElement('div');
+      container.classList.add("container","mt-50");
+      let button = document.createElement('button');
+      button.textContent = "Back";
+      button.className = "back-button";
+      let countryInfo = document.createElement('div');
+      countryInfo.classList.add("country-info","mt-50");
+      let imgHolder = document.createElement('div')
+      imgHolder.className = "img-holder";
+      let img = document.createElement('img');
+      let imgSrc = data[0].flags.png;
+      img.setAttribute('src',imgSrc);
+      let countryDescription = document.createElement('div');
+      countryDescription.className = "country-description";
+      let countryTitle = document.createElement('h1');
+      countryTitle.textContent = data[0].name.common;
+      let countryDetails = document.createElement('div');
+      countryDetails.classList.add('country-details','mt-50');
+      let col1 = document.createElement('div');
+      col1.className = "col-1";
+      let p1 = document.createElement('p');
+      p1.textContent = `Native name: ${data[0].name.common}`;
+      let p2 = document.createElement('p');
+      p2.textContent = `Population: ${data[0].population}`;
+      let p3 = document.createElement('p');
+      p3.textContent = `Region: ${data[0].region}`;
+      let p4 = document.createElement('p');
+      if(data[0].subregion){
+        p4.textContent = `Sub-Region: ${data[0].subregion}`;
+      }else {
+        p4.textContent = `Sub-Region: none`;
+      }
+      
+      let p5 = document.createElement('p');
+      if (data[0].capital){
+        p5.textContent = `Capital: ${data[0].capital}`;
+      }else {
+        p5.textContent = `Capital: none`;
+      }
+      
+      let col2 = document.createElement('div');
+      col2.className = "col-2";
+      let p6 = document.createElement('p');
+      p6.textContent = `Top level Domain: ${data[0].tld[0]}`;
+      let p7 = document.createElement('p');
+
+      // get currency Object
+      let currencyObj = data[0].currencies;
+      
+      // get currency Key
+      let NationalCurrency = "";
+      for ( const keys in currencyObj){
+        if(currencyObj.hasOwnProperty(keys)){
+          NationalCurrency = currencyObj[keys];
+        }
+      }
+
+     if(NationalCurrency.name ) {
+      p7.textContent = `Currency: ${NationalCurrency.name} `;
+     }else {
+      p7.textContent = `Currency: none `;
+     }
+      
+      
+      let p8 = document.createElement('p');
+
+      //get language Object from  API call
+      let langObj = data[0].languages;
+    
+      // Declare variable to hold all langauges during itteration
+      let allLanguages = "";
+
+      //Itterate the through the langauge Obj
+      for (const key in langObj) {
+        if (langObj.hasOwnProperty(key)) {
+          const value = langObj[key];
+          allLanguages += `${value}, `
+        }
+      }
+
+    // remove the last comma from All 
+     allLanguages = allLanguages.slice(0, -2);
+     p8.textContent = `language: ${allLanguages}`;
+      
+      
+      let borderCountries = document.createElement('div');
+      borderCountries.classList.add("border-countries","mt-50");
+      let p9 = document.createElement('p');
+      p9.textContent = "Border Countries";
+      borderCountries.appendChild(p9)
+      ;
+
+      //get border array
+      const borderArr = data[0].borders;
+      console.log(borderArr);
+      if(borderArr) {
+        for( let i = 0; i < borderArr.length; i++){
+          const a1 = document.createElement('a');
+          a1.textContent = borderArr[i];
+          borderCountries.appendChild(a1)
+        }
+      }else {
+        const a1 = document.createElement('a');
+        a1.textContent = "no border";
+        borderCountries.appendChild(a1)
+      }
+      
+
+      //add p6, p7, p8 to col2
+      col2.appendChild(p6)
+      col2.appendChild(p7)
+      col2.appendChild(p8)
+
+      //add p1, p2, p3, p4, p5 to col1
+      col1.appendChild(p1)
+      col1.appendChild(p2)
+      col1.appendChild(p3)
+      col1.appendChild(p4)
+      col1.appendChild(p5)
+
+      //add col1, col2 to countryDetails
+      countryDetails.appendChild(col1)
+      countryDetails.appendChild(col2)
+
+      //add countryTitle to countryDescription
+      countryDescription.appendChild(countryTitle);
+
+      //add countrydetails to countryDescription
+      countryDescription.appendChild(countryDetails);
+
+      //add BorderCountries to countryDescription
+      countryDescription.appendChild(borderCountries);
+
+
+      //add image to imgHolder
+      imgHolder.appendChild(img);
+
+      //add imgHolder and countryDescription to countryInfo
+      countryInfo.appendChild(imgHolder)
+      countryInfo.appendChild(countryDescription)
+
+      //add button, countryInfo and country Description to container
+      container.appendChild(button);
+      container.appendChild(countryInfo);
+      container.appendChild(countryInfo);
+      UpdateContainer.appendChild(container);
+
+      //button functionality relaods the page
+      button.addEventListener('click',() => {
+        location.reload();
+      })
+
+})
+    .catch(error => {
+      console.error('There was a problem with the fetch operation:', error);
+    })
+  }
